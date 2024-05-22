@@ -10,7 +10,10 @@ export class User {
   name: string;
   @Prop({ required: true })
   email: string;
-  @Prop({ required: true, set: (value: string) => hashSync(value, 10) })
+  @Prop({
+    required: true,
+    //  set: (value: string) => hashSync(value, 10)
+  })
   password: string;
 }
 

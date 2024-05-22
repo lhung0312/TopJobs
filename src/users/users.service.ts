@@ -4,6 +4,7 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './schemas/user.schemas';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -12,18 +13,21 @@ export class UsersService {
     @InjectConnection() private connection: Connection,
   ) {}
 
+  async getHashPassword(password: String) {
+    const saltOrRounds = 10;
+    const hash = await bcrypt.hash(password, saltOrRounds);
+    return hash;
+  }
   async create(createUserDto: CreateUserDto): Promise<User> {
-    // const bcrypt = require('bcrypt');
-    // const saltRounds = 10;
-    // const myPlaintextPassword = 's0//P4$$w0rD';
-    // const someOtherPlaintextPassword = 'not_bacon';
-
-    // bcrypt.hash(myPlaintextPassword, saltRounds, function (err, hash) {
-    //   // Store hash in your password DB.
-    // });
-
-    const createdUser = new this.userModel(createUserDto);
+    const createdUser = new this.userModel({
+      ...createUserDto,
+      password: await this.getHashPassword(createUserDto.password),
+    });
     return createdUser.save();
+  }
+  async IsValidPass(pass: string, hash: string) {
+    const isMatch = await bcrypt.compare(pass, hash);
+    return isMatch;
   }
 
   async findAll(): Promise<User[]> {
@@ -32,6 +36,9 @@ export class UsersService {
 
   async findOne(id): Promise<User> {
     return this.userModel.findById(id).exec();
+  }
+  async findOneByUsername(username: string): Promise<User> {
+    return this.userModel.findOne({ email: username });
   }
   async update(updateUserDto: UpdateUserDto) {
     return this.userModel.updateOne(
