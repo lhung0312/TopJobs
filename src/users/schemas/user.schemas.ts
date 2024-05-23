@@ -4,7 +4,7 @@ import { hashSync } from 'bcrypt';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class User {
   @Prop()
   name: string;

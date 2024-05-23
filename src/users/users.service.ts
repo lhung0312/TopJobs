@@ -2,14 +2,15 @@ import mongoose, { Connection, Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './schemas/user.schemas';
+import { User, UserDocument } from './schemas/user.schemas';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(User.name) private userModel: SoftDeleteModel<UserDocument>,
     @InjectConnection() private connection: Connection,
   ) {}
 
@@ -34,7 +35,7 @@ export class UsersService {
     return this.userModel.find().exec();
   }
 
-  async findOne(id): Promise<User> {
+  async findOne(id): Promise<User | string> {
     return this.userModel.findById(id).exec();
   }
   async findOneByUsername(username: string): Promise<User> {
@@ -50,6 +51,6 @@ export class UsersService {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');
     }
-    return this.userModel.deleteOne({ _id: id }).exec();
+    return this.userModel.softDelete({ _id: id });
   }
 }
