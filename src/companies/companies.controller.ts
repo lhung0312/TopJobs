@@ -10,14 +10,19 @@ import {
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { User } from 'src/decorators/user.decorator';
+import { IUser } from 'src/users/users.interface';
+import mongoose from 'mongoose';
+import { identity } from 'rxjs';
 
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Post()
-  create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companiesService.create(createCompanyDto);
+  create(@Body() createCompanyDto: CreateCompanyDto, @User() user: IUser) {
+    console.log(user);
+    return this.companiesService.create(createCompanyDto, user);
   }
 
   @Get()
@@ -31,12 +36,16 @@ export class CompaniesController {
   }
 
   @Patch(':id')
-  update(@Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companiesService.update(updateCompanyDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+    @User() user: IUser,
+  ) {
+    return this.companiesService.update(updateCompanyDto, id, user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.companiesService.remove(id);
+  remove(@Param('id') id: string, @User() user: IUser) {
+    return this.companiesService.remove(id, user);
   }
 }
