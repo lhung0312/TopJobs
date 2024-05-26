@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -14,6 +15,7 @@ import { User } from 'src/decorators/user.decorator';
 import { IUser } from 'src/users/users.interface';
 import mongoose from 'mongoose';
 import { identity } from 'rxjs';
+import { ResponseMessage } from 'src/decorators/message.customize';
 
 @Controller('companies')
 export class CompaniesController {
@@ -26,8 +28,13 @@ export class CompaniesController {
   }
 
   @Get()
-  findAll() {
-    return this.companiesService.findAll();
+  @ResponseMessage('Fetch list company with paginate')
+  findAll(
+    @Query('page') currentPage: string,
+    @Query('limit') limit: string,
+    @Query() qs: string,
+  ) {
+    return this.companiesService.findAll(+currentPage, +limit, qs);
   }
 
   @Get(':id')
