@@ -26,6 +26,14 @@ export class Company {
     _id: mongoose.Types.ObjectId;
     email: string;
   };
+  @Prop()
+  createdAt: Date;
+  @Prop()
+  updatedAt: Date;
+  @Prop()
+  deletedAt: Date;
+  @Prop()
+  isDeleted: boolean;
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
