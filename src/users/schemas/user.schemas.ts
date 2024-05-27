@@ -24,6 +24,7 @@ export class User {
   role: string;
   @Prop()
   refreshToken: string;
+  @Prop({ type: Object })
   createdBy: {
     _id: mongoose.Types.ObjectId;
     email: string;
@@ -34,7 +35,7 @@ export class User {
     email: string;
   };
   @Prop({ type: Object })
-  deleteBy: {
+  deletedBy: {
     _id: mongoose.Types.ObjectId;
     email: string;
   };

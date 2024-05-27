@@ -1,4 +1,5 @@
 import { Type } from 'class-transformer';
+
 import {
   IsEmail,
   IsNotEmpty,
@@ -37,10 +38,17 @@ export class CreateUserDto {
   role: string;
 }
 export class RegisterUserDto {
+  @IsNotEmpty()
+  name: String;
   @IsEmail()
   @IsNotEmpty()
   email: String;
   @IsNotEmpty()
   password: String;
-  name: String;
+  @IsNotEmpty()
+  age: number;
+  @IsNotEmpty()
+  gender: string;
+  @IsNotEmpty()
+  address: string;
 }
