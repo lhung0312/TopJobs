@@ -7,7 +7,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from './users.interface';
-import emailCheck from 'email-check';
 import aqp from 'api-query-params';
 
 @Injectable()
@@ -16,13 +15,11 @@ export class UsersService {
     @InjectModel(UserM.name) private userModel: SoftDeleteModel<UserDocument>,
     @InjectConnection() private connection: Connection,
   ) {}
-
   async getHashPassword(password: String) {
     const saltOrRounds = 10;
     const hash = await bcrypt.hash(password, saltOrRounds);
     return hash;
   }
-
   async create(createUserDto: CreateUserDto, user: IUser) {
     const isExistEmail = await this.userModel.findOne({
       email: createUserDto.email,
@@ -46,7 +43,6 @@ export class UsersService {
       email: newUser?.email,
     };
   }
-
   async registerAuth(registerUserDto: RegisterUserDto) {
     const isExistEmail = await this.userModel.findOne({
       email: registerUserDto.email,
@@ -67,10 +63,11 @@ export class UsersService {
     const isMatch = await bcrypt.compare(pass, hash);
     return isMatch;
   }
-
   async findAll(currentPage: number, limit: number, qs: string) {
     const { filter, sort, population } = aqp(qs);
-    delete filter.page;
+    delete filter.current;
+    delete filter.pageSize;
+
     // delete filter.limit;
     let offset = (currentPage - 1) * limit;
     let defaultLimit = limit ? limit : 10;
@@ -95,7 +92,6 @@ export class UsersService {
     };
     return this.userModel.find().exec();
   }
-
   async findOne(id): Promise<UserM | string> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new Error('not found user');
@@ -127,4 +123,10 @@ export class UsersService {
     );
     return this.userModel.softDelete({ _id: id });
   }
+  updateRefreshToken = async (refreshToken: string, _id: string) => {
+    return await this.userModel.updateOne({ _id }, { refreshToken });
+  };
+  findUserByToken = (refreshToken: string) => {
+    return this.userModel.findOne({ refreshToken });
+  };
 }
