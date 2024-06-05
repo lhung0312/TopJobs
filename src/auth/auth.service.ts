@@ -24,6 +24,14 @@ export class AuthService {
     }
     return null;
   }
+  createRefreshToken = (payload: any) => {
+    const a = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('SECRET_JWT_REFRESH'),
+      expiresIn:
+        ms(this.configService.get<string>('EXPIRE_JWT_REFRESH')) / 1000,
+    });
+    return a;
+  };
   async login(user: IUser, response: Response) {
     const { _id, name, email, role } = user;
     const payload = {
@@ -35,12 +43,14 @@ export class AuthService {
       role,
     };
     const refresh_token = this.createRefreshToken(payload);
+    console.log(refresh_token);
 
     await this.usersService.updateRefreshToken(refresh_token, _id);
+
     //
     response.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      maxAge: ms(this.configService.get<string>('EXPIRE_JWT_REFRESH')) * 1000,
+      maxAge: ms(this.configService.get<string>('EXPIRE_JWT_REFRESH')),
     });
 
     return {
@@ -53,14 +63,6 @@ export class AuthService {
       },
     };
   }
-  createRefreshToken = (payload: any) => {
-    const a = this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('SECRET_JWT_REFRESH'),
-      expiresIn:
-        ms(this.configService.get<string>('EXPIRE_JWT_REFRESH')) / 1000,
-    });
-    return a;
-  };
 
   async register(registerUserDto: RegisterUserDto) {
     const registerUser = await this.usersService.registerAuth(registerUserDto);
@@ -97,8 +99,7 @@ export class AuthService {
 
         response.cookie('refresh_token', refresh_token, {
           httpOnly: true,
-          maxAge:
-            ms(this.configService.get<string>('EXPIRE_JWT_REFRESH')) * 1000,
+          maxAge: ms(this.configService.get<string>('EXPIRE_JWT_REFRESH')),
         });
 
         return {

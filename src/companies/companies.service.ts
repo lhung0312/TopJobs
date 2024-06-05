@@ -56,8 +56,6 @@ export class CompaniesService {
       },
       result,
     };
-
-    return this.companyModel.find(filter).exec();
   }
 
   async findOne(id: string): Promise<Company | string> {
