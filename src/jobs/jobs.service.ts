@@ -23,14 +23,14 @@ export class JobsService {
     return 'startDate không thể lớn hơn endDate';
   }
 
-  async findAll(currentPage: number, limit: number, qs: string) {
+  async findAll(current: number, pageSize: number, qs: string) {
     const { filter, sort, population } = aqp(qs);
-    delete filter.currentPage;
-    delete filter.limit;
-    console.log('limit: ', limit);
+    delete filter.current;
+    delete filter.pageSize;
+    console.log('pageSize: ', pageSize);
     console.log('filter: ', filter);
-    let offset = (currentPage - 1) * limit;
-    let defaultLimit = limit ? limit : 10;
+    let offset = (current - 1) * pageSize;
+    let defaultLimit = pageSize ? pageSize : 10;
     const totalItems = (await this.jobModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);
     const result = await this.jobModel
@@ -42,8 +42,8 @@ export class JobsService {
       .exec();
     return {
       meta: {
-        current: currentPage,
-        pageSize: limit,
+        current: current,
+        pageSize: pageSize,
         pages: totalPages,
         total: totalItems,
       },

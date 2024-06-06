@@ -10,6 +10,8 @@ export class Company {
   @Prop({ required: true })
   address: string;
   @Prop()
+  image: String;
+  @Prop()
   description: string;
   @Prop({ type: Object })
   createdBy: {

@@ -37,6 +37,7 @@ export class AuthController {
   create(@Body() registerUserDto: RegisterUserDto) {
     return this.authService.register(registerUserDto);
   }
+  @Public()
   @ResponseMessage('get user information')
   @Get('account')
   accountUser(@User() user: IUser) {

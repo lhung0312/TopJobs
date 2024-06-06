@@ -16,6 +16,7 @@ import { IUser } from 'src/users/users.interface';
 import mongoose from 'mongoose';
 import { identity } from 'rxjs';
 import { ResponseMessage } from 'src/decorators/message.customize';
+import { Public } from 'src/decorators/customizePublic';
 
 @Controller('companies')
 export class CompaniesController {
@@ -27,16 +28,17 @@ export class CompaniesController {
     return this.companiesService.create(createCompanyDto, user);
   }
 
+  @Public()
   @Get()
   @ResponseMessage('Fetch list company with paginate')
   findAll(
-    @Query('current') currentPage: string,
-    @Query('pageSize') limit: string,
+    @Query('current') current: string,
+    @Query('pageSize') pageSize: string,
     @Query() qs: string,
   ) {
-    return this.companiesService.findAll(+currentPage, +limit, qs);
+    return this.companiesService.findAll(+current, +pageSize, qs);
   }
-
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.companiesService.findOne(id);

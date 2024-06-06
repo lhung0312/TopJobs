@@ -30,27 +30,27 @@ export class CompaniesService {
     return createdCompany.save();
   }
 
-  async findAll(currentPage: number, limit: number, qs: string) {
+  async findAll(current: number, pageSize: number, qs: string) {
     const { filter, sort, population } = aqp(qs);
     delete filter.current;
     delete filter.pageSize;
 
-    // delete filter.limit;
-    let offset = (currentPage - 1) * limit;
-    let defaultLimit = limit ? limit : 10;
+    // delete filter.pageSize;
+    let offset = (current - 1) * pageSize;
+    let defaultpageSize = pageSize ? pageSize : 10;
     const totalItems = (await this.companyModel.find(filter)).length;
-    const totalPages = Math.ceil(totalItems / defaultLimit);
+    const totalPages = Math.ceil(totalItems / defaultpageSize);
     const result = await this.companyModel
       .find(filter)
       .skip(offset)
-      .limit(defaultLimit)
+      .limit(defaultpageSize)
       .sort(sort as any)
       .populate(population)
       .exec();
     return {
       meta: {
-        current: currentPage, //trang hiện tại
-        pageSize: limit, //số lượng bản ghi đã lấy
+        current: current, //trang hiện tại
+        pageSize: pageSize, //số lượng bản ghi đã lấy
         pages: totalPages, //tổng số trang với điều kiện query
         total: totalItems, // tổng số phần tử (số bản ghi)
       },

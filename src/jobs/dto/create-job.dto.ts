@@ -11,9 +11,13 @@ export class CreateJobDto {
   skills: string[];
 
   @IsNotEmpty()
+  location: string;
+
+  @IsNotEmpty()
   company: {
     _id: string;
     name: string;
+    logo: string;
   };
 
   @IsNotEmpty()
