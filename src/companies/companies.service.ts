@@ -1,5 +1,5 @@
 import mongoose, { Connection } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
@@ -60,7 +60,7 @@ export class CompaniesService {
 
   async findOne(id: string): Promise<Company | string> {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new Error('Invalid ID format');
+      throw new BadRequestException('Invalid ID format');
     }
     const company = await this.companyModel.findById(id).exec();
     return company || 'not found company';

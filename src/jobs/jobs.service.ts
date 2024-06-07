@@ -16,7 +16,6 @@ export class JobsService {
   ) {}
   async create(createJobDto: CreateJobDto, user: IUser) {
     const isBefore = isBeforeDate(createJobDto.startDate, createJobDto.endDate);
-    console.log(isBefore);
     if (isBefore) {
       return await this.jobModel.create({ ...createJobDto, createdBy: user });
     }
@@ -27,8 +26,7 @@ export class JobsService {
     const { filter, sort, population } = aqp(qs);
     delete filter.current;
     delete filter.pageSize;
-    console.log('pageSize: ', pageSize);
-    console.log('filter: ', filter);
+
     let offset = (current - 1) * pageSize;
     let defaultLimit = pageSize ? pageSize : 10;
     const totalItems = (await this.jobModel.find(filter)).length;

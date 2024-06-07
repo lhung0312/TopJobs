@@ -43,8 +43,6 @@ export class AuthService {
       role,
     };
     const refresh_token = this.createRefreshToken(payload);
-    console.log(refresh_token);
-
     await this.usersService.updateRefreshToken(refresh_token, _id);
 
     //
