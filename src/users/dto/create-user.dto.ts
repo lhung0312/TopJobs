@@ -2,6 +2,7 @@ import { Type } from 'class-transformer';
 
 import {
   IsEmail,
+  IsMongoId,
   IsNotEmpty,
   IsNotEmptyObject,
   IsObject,
@@ -35,6 +36,7 @@ export class CreateUserDto {
   @Type(() => Company)
   company: Company;
   @IsNotEmpty()
+  @IsMongoId({ message: 'role phải có định dạng ObjectID' })
   role: string;
 }
 export class RegisterUserDto {

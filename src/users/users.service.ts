@@ -8,12 +8,13 @@ import * as bcrypt from 'bcrypt';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from './users.interface';
 import aqp from 'api-query-params';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(UserM.name) private userModel: SoftDeleteModel<UserDocument>,
-    @InjectConnection() private connection: Connection,
+    private configService: ConfigService,
   ) {}
   async getHashPassword(password: String) {
     const saltOrRounds = 10;
@@ -96,10 +97,15 @@ export class UsersService {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new Error('not found user');
     }
-    return await this.userModel.findById(id).select('-password');
+    return await this.userModel
+      .findById(id)
+      .select('-password')
+      .populate({ path: 'role', select: { name: 1, _id: 1 } });
   }
   async findOneByUsername(username: string): Promise<UserM> {
-    return this.userModel.findOne({ email: username });
+    return this.userModel
+      .findOne({ email: username })
+      .populate({ path: 'role', select: { name: 1, Permissions: 1 } });
   }
   async update(updateUserDto: UpdateUserDto, user: IUser) {
     return this.userModel.updateOne(
@@ -115,7 +121,12 @@ export class UsersService {
   }
   async remove(id: string, user: IUser) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new Error('not found user');
+      throw new BadRequestException('không thể tìm thấy User');
+    }
+    const emailAdmin = this.configService.get<string>('EMAIL_ADMIN');
+    const checkUser = await this.userModel.findOne({ _id: id });
+    if (checkUser.email === emailAdmin) {
+      throw new BadRequestException('không thể xoá tài khoản Admin');
     }
     await this.userModel.updateOne(
       { _id: id },

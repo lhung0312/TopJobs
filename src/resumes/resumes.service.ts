@@ -116,8 +116,14 @@ export class ResumesService {
   }
 
   async findByUser(user: IUser) {
-    return await this.resumeModel.find({
-      createdBy: { _id: user._id, email: user.email },
-    });
+    return await this.resumeModel
+      .find({
+        createdBy: { _id: user._id, email: user.email },
+      })
+      .sort('createdAt')
+      .populate([
+        { path: 'companyId', select: { name: 1 } },
+        { path: 'jobId', select: { name: 1 } },
+      ]);
   }
 }
