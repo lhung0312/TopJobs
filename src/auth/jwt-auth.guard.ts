@@ -1,5 +1,6 @@
 import {
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -23,10 +24,24 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
     return super.canActivate(context);
   }
-  handleRequest(err, user, info) {
+  handleRequest(err, user, info, context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest();
     // You can throw an exception based on either "info" or "err" arguments
     if (err || !user) {
       throw err || new UnauthorizedException('invalid accessToken ');
+    }
+    //check permissions
+    const targetMethod = request.method;
+    const targetEndpoint = request.route?.path;
+
+    const permissions = user?.permissions ?? [];
+    const isExist = permissions.find(
+      (permission) =>
+        targetMethod === permission.method &&
+        targetEndpoint === permission.path,
+    );
+    if (!isExist) {
+      throw new ForbiddenException('bạn không có quyền truy cập endpoint này');
     }
     return user;
   }
