@@ -17,10 +17,14 @@ import { Response } from 'express';
 import { User } from 'src/decorators/user.decorator';
 import { IUser } from 'src/users/users.interface';
 import { Request } from 'express';
+import { RolesService } from 'src/roles/roles.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private rolesService: RolesService,
+  ) {}
   @ResponseMessage('Login user success')
   @UseGuards(LocalAuthGuard)
   @Public()
@@ -37,10 +41,11 @@ export class AuthController {
   create(@Body() registerUserDto: RegisterUserDto) {
     return this.authService.register(registerUserDto);
   }
-  @Public()
   @ResponseMessage('get user information')
   @Get('account')
-  accountUser(@User() user: IUser) {
+  async accountUser(@User() user: IUser) {
+    const userRole = (await this.rolesService.findOne(user.role._id)) as any;
+    user.permissions = userRole.permissions;
     return { user };
   }
   @Public()
