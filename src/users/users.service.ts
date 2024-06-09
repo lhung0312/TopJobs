@@ -9,11 +9,15 @@ import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from './users.interface';
 import aqp from 'api-query-params';
 import { ConfigService } from '@nestjs/config';
+import { Role, RoleDocument } from 'src/roles/schemas/role.schema';
+import { USER_ROLE } from 'src/databases/sample';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(UserM.name) private userModel: SoftDeleteModel<UserDocument>,
+    @InjectModel(Role.name) private roleModel: SoftDeleteModel<RoleDocument>,
+
     private configService: ConfigService,
   ) {}
   async getHashPassword(password: String) {
@@ -53,10 +57,12 @@ export class UsersService {
         `Email: ${registerUserDto.email} đã tồn tại. Vui lòng kiểm tra lại`,
       );
     }
+    //fetch userRole
+    const userRole = await this.roleModel.findOne({ name: USER_ROLE });
     const register = await this.userModel.create({
       ...registerUserDto,
       password: await this.getHashPassword(registerUserDto.password),
-      role: 'USER',
+      role: userRole?._id,
     });
     return register;
   }
@@ -102,10 +108,10 @@ export class UsersService {
       .select('-password')
       .populate({ path: 'role', select: { name: 1, _id: 1 } });
   }
-  async findOneByUsername(username: string): Promise<UserM> {
+  async findOneByUsername(username: string) {
     return this.userModel
       .findOne({ email: username })
-      .populate({ path: 'role', select: { name: 1, Permissions: 1 } });
+      .populate({ path: 'role', select: { name: 1 } });
   }
   async update(updateUserDto: UpdateUserDto, user: IUser) {
     return this.userModel.updateOne(
@@ -125,7 +131,7 @@ export class UsersService {
     }
     const emailAdmin = this.configService.get<string>('EMAIL_ADMIN');
     const checkUser = await this.userModel.findOne({ _id: id });
-    if (checkUser.email === emailAdmin) {
+    if (checkUser && checkUser.email === emailAdmin) {
       throw new BadRequestException('không thể xoá tài khoản Admin');
     }
     await this.userModel.updateOne(
@@ -138,6 +144,8 @@ export class UsersService {
     return await this.userModel.updateOne({ _id }, { refreshToken });
   };
   findUserByToken = (refreshToken: string) => {
-    return this.userModel.findOne({ refreshToken });
+    return this.userModel
+      .findOne({ refreshToken })
+      .populate({ path: 'role', select: { name: 1 } });
   };
 }
