@@ -45,46 +45,34 @@ TopJobs is a website application developed using NestJs framework for recruitmen
 
     Create a .env file from the provided .env.example and update it with your configuration settings:
    ```sh
-   # MongoDB Connection String
-  MONGO_URL=mongodb+srv://your_username:your_password@your_cluster.mongodb.net/
-
-    # Port number for the server
-  PORT=3000
-
-    # Access token secret for JWT
-    SECRET_JWT_ACCESS=your_access_secret
+   PORT=3000
+   MONGO_URL=mongodb+srv://your_username:your_password@your_cluster.mongodb.net/
+   
+   # Access token for JWT
+   SECRET_JWT_ACCESS=your_access_secret
+   EXPIRE_JWT_ACCESS=1h
+   
+   # Refresh token for JWT
+   SECRET_JWT_REFRESH=your_refresh_secret
+   EXPIRE_JWT_REFRESH=7d
+   
+   # account Admin 
+   EMAIL_ADMIN=admin@gmail.com
+   ROLE_ADMIN=ADMIN
     
-    # Expiry time for access token (e.g., 1d for 1 day)
-    EXPIRE_JWT_ACCESS=1d
-    
-    # Refresh token secret for JWT
-    SECRET_JWT_REFRESH=your_refresh_secret
-    
-    # Expiry time for refresh token (e.g., 5d for 5 days)
-    EXPIRE_JWT_REFRESH=5d
-    
-    # Admin email
-    EMAIL_ADMIN=admin@gmail.com
-
-    # Admin role
-    ROLE_ADMIN=ADMIN
-    
-    # Initialize sample data on startup (true/false)
-    SHOULD_INIT=true
-    
-    # Initial password for sample data
-    INIT_PASSWORD=123456
-
+   # Initialize sample data on startup (true/false)
+   SHOULD_INIT=true
+   INIT_PASSWORD=your_init_password
    ```
 
 ## Usage
    
  1. Start the development server:
- 
+
     ```sh
     npm run dev
     ```
- 2. Open your browser and visit:
+ 3. Open your browser and visit:
     http://localhost:3000
    
  ## Contact
