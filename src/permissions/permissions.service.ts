@@ -16,7 +16,10 @@ export class PermissionsService {
   ) {}
   async create(createPermissionDto: CreatePermissionDto, user: IUser) {
     const { apiPath, method } = createPermissionDto;
-    let isExist = await this.permissionModel.find({ apiPath, method });
+
+    let isExist = await this.permissionModel.findOne({ apiPath, method });
+    console.log('isExist: ', isExist);
+
     if (isExist) {
       throw new BadRequestException('permission existed');
     }
