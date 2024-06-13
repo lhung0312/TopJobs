@@ -11,12 +11,12 @@ import {
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
-import { User } from 'src/decorators/user.decorator';
+import { User } from 'src/decorators/getReqUser';
 import { IUser } from 'src/users/users.interface';
 import mongoose from 'mongoose';
 import { identity } from 'rxjs';
-import { ResponseMessage } from 'src/decorators/message.customize';
-import { Public } from 'src/decorators/customizePublic';
+import { ResponseMessage } from 'src/decorators/responseMessage';
+import { Public } from 'src/decorators/publicAuth';
 
 @Controller('companies')
 export class CompaniesController {

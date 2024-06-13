@@ -11,10 +11,10 @@ import {
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { ResponseMessage } from 'src/decorators/message.customize';
-import { User } from 'src/decorators/user.decorator';
+import { ResponseMessage } from 'src/decorators/responseMessage';
+import { User } from 'src/decorators/getReqUser';
 import { IUser } from 'src/users/users.interface';
-import { Public } from 'src/decorators/customizePublic';
+import { Public } from 'src/decorators/publicAuth';
 
 @Controller('jobs')
 export class JobsController {
@@ -25,6 +25,7 @@ export class JobsController {
   create(@Body() createJobDto: CreateJobDto, @User() user: IUser) {
     return this.jobsService.create(createJobDto, user);
   }
+
   @Public()
   @ResponseMessage('Fetch jobs with paginate')
   @Get()
@@ -35,12 +36,14 @@ export class JobsController {
   ) {
     return this.jobsService.findAll(+current, +pageSize, qs);
   }
+
   @Public()
   @ResponseMessage('Fetch job by id')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.jobsService.findOne(id);
   }
+
   @ResponseMessage('Update job success')
   @Patch('')
   update(@Body() updateJobDto: UpdateJobDto, @User() user: IUser) {

@@ -81,7 +81,6 @@ export class ResumesService {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new BadRequestException('not found resume');
     }
-
     if (status) {
       let resume = await this.resumeModel.findOne({ _id: id });
       resume.history.push({

@@ -78,8 +78,8 @@ export class RolesService {
       throw new BadRequestException('Invalid ID format');
     }
     const roleAdmin = this.configService.get<string>('ROLE_ADMIN');
-    const checkRole = await this.roleModel.findOne({ _id: id });
-    if (checkRole.name === roleAdmin) {
+    const role = await this.roleModel.findOne({ _id: id });
+    if (role.name === roleAdmin) {
       throw new BadRequestException('không thể xoá Role của Admin');
     }
     await this.roleModel.findByIdAndUpdate(

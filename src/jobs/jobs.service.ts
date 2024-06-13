@@ -49,8 +49,8 @@ export class JobsService {
     };
   }
 
-  findOne(id: string) {
-    return this.jobModel.findOne({ _id: id });
+  async findOne(id: string) {
+    return await this.jobModel.findOne({ _id: id });
   }
 
   async update(updateJobDto: UpdateJobDto, user: IUser) {

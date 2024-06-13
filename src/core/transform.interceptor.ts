@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 import {
   RESPONSE_MESSAGE,
   ResponseMessage,
-} from 'src/decorators/message.customize';
+} from 'src/decorators/responseMessage';
 
 export interface Response<T> {
   statusCode: number;

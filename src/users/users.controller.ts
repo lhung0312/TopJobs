@@ -11,10 +11,10 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ResponseMessage } from 'src/decorators/message.customize';
+import { ResponseMessage } from 'src/decorators/responseMessage';
 import { IUser } from './users.interface';
-import { User } from 'src/decorators/user.decorator';
-import { Public } from 'src/decorators/customizePublic';
+import { User } from 'src/decorators/getReqUser';
+import { Public } from 'src/decorators/publicAuth';
 
 @Controller('users')
 export class UsersController {

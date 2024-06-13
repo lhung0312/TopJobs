@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Public } from 'src/decorators/customizePublic';
-import { ResponseMessage } from 'src/decorators/message.customize';
+import { Public } from 'src/decorators/publicAuth';
+import { ResponseMessage } from 'src/decorators/responseMessage';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import {
   Subscriber,
@@ -22,10 +22,10 @@ export class MailController {
     private jobModel: SoftDeleteModel<JobDocument>,
   ) {}
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
-  handleCron() {
-    console.log('Called every 30 seconds');
-  }
+  // @Cron(CronExpression.EVERY_30_SECONDS)
+  // handleCron() {
+  //   console.log('Called every 30 seconds');
+  // }
 
   @Get()
   @Public()

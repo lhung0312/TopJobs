@@ -11,10 +11,10 @@ import {
 import { SubscribersService } from './subscribers.service';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { UpdateSubscriberDto } from './dto/update-subscriber.dto';
-import { ResponseMessage } from 'src/decorators/message.customize';
-import { User } from 'src/decorators/user.decorator';
+import { ResponseMessage } from 'src/decorators/responseMessage';
+import { User } from 'src/decorators/getReqUser';
 import { IUser } from 'src/users/users.interface';
-import { Public } from 'src/decorators/customizePublic';
+import { Public } from 'src/decorators/publicAuth';
 import { SkipCheckPermission } from 'src/decorators/publicPermission';
 
 @Controller('subscribers')

@@ -12,8 +12,8 @@ import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { IUser } from 'src/users/users.interface';
-import { User } from 'src/decorators/user.decorator';
-import { ResponseMessage } from 'src/decorators/message.customize';
+import { User } from 'src/decorators/getReqUser';
+import { ResponseMessage } from 'src/decorators/responseMessage';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -27,6 +27,7 @@ export class PermissionsController {
   ) {
     return this.permissionsService.create(createPermissionDto, user);
   }
+
   @ResponseMessage('Fetch permission with paginate')
   @Get()
   findAll(
@@ -41,6 +42,7 @@ export class PermissionsController {
   findOne(@Param('id') id: string) {
     return this.permissionsService.findOne(id);
   }
+
   @ResponseMessage('update permission')
   @Patch(':id')
   update(
@@ -50,6 +52,7 @@ export class PermissionsController {
   ) {
     return this.permissionsService.update(id, updatePermissionDto, user);
   }
+
   @ResponseMessage('delete permission')
   @Delete(':id')
   remove(@Param('id') id: string, @User() user: IUser) {

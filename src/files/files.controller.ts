@@ -15,8 +15,8 @@ import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Public } from 'src/decorators/customizePublic';
-import { ResponseMessage } from 'src/decorators/message.customize';
+import { Public } from 'src/decorators/publicAuth';
+import { ResponseMessage } from 'src/decorators/responseMessage';
 
 @Controller('files')
 export class FilesController {

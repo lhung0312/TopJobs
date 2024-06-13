@@ -11,9 +11,9 @@ import {
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { ResponseMessage } from 'src/decorators/message.customize';
+import { ResponseMessage } from 'src/decorators/responseMessage';
 import { IUser } from 'src/users/users.interface';
-import { User } from 'src/decorators/user.decorator';
+import { User } from 'src/decorators/getReqUser';
 
 @Controller('roles')
 export class RolesController {
@@ -24,6 +24,7 @@ export class RolesController {
   create(@Body() createRoleDto: CreateRoleDto, @User() user: IUser) {
     return this.rolesService.create(createRoleDto, user);
   }
+
   @ResponseMessage('Fetch role with paginate')
   @Get()
   findAll(
@@ -33,11 +34,13 @@ export class RolesController {
   ) {
     return this.rolesService.findAll(+current, +pageSize, qs);
   }
+
   @ResponseMessage('Fetch role by id')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.rolesService.findOne(id);
   }
+
   @ResponseMessage('delete role')
   @Patch(':id')
   update(
@@ -47,6 +50,7 @@ export class RolesController {
   ) {
     return this.rolesService.update(id, updateRoleDto, user);
   }
+
   @Delete(':id')
   remove(@Param('id') id: string, @User() user: IUser) {
     return this.rolesService.remove(id, user);

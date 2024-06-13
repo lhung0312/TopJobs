@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
-import { Public } from 'src/decorators/customizePublic';
+import { Public } from 'src/decorators/publicAuth';
 import { RegisterUserDto } from 'src/users/dto/create-user.dto';
-import { ResponseMessage } from 'src/decorators/message.customize';
+import { ResponseMessage } from 'src/decorators/responseMessage';
 import { Response } from 'express';
-import { User } from 'src/decorators/user.decorator';
+import { User } from 'src/decorators/getReqUser';
 import { IUser } from 'src/users/users.interface';
 import { Request } from 'express';
 import { RolesService } from 'src/roles/roles.service';
@@ -29,7 +29,7 @@ export class AuthController {
   @ResponseMessage('Login user success')
   @UseGuards(LocalAuthGuard)
   @UseGuards(ThrottlerGuard)
-  @Throttle({ default: { limit: 3, ttl: 60 } })
+  @Throttle({ default: { limit: 10, ttl: 60 } })
   @Public()
   @Post('login')
   async handleLogin(
