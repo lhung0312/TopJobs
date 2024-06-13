@@ -10,6 +10,7 @@ import {
 } from 'src/subscribers/schemas/subscriber.schema';
 import { Job, JobDocument } from 'src/jobs/schemas/job.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { Cron, CronExpression } from '@nestjs/schedule';
 @Controller('mail')
 export class MailController {
   constructor(
@@ -20,24 +21,17 @@ export class MailController {
     @InjectModel(Job.name)
     private jobModel: SoftDeleteModel<JobDocument>,
   ) {}
+
+  @Cron(CronExpression.EVERY_30_SECONDS)
+  handleCron() {
+    console.log('Called every 30 seconds');
+  }
+
   @Get()
   @Public()
   @ResponseMessage('Test email')
+  @Cron('0 10 0 * * 0')
   async handleTestEmail() {
-    const jobs = [
-      {
-        name: 'nodejs',
-        company: 'fpt',
-        salary: '1000$',
-        skills: ['nodejs', 'english'],
-      },
-      {
-        name: 'php',
-        company: 'fpt',
-        salary: '1000$',
-        skills: ['php', 'japanese'],
-      },
-    ];
     const subscribers = await this.subscriberModel.find({});
     for (const subs of subscribers) {
       const subsSkills = subs.skills;
