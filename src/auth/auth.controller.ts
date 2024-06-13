@@ -18,6 +18,7 @@ import { User } from 'src/decorators/user.decorator';
 import { IUser } from 'src/users/users.interface';
 import { Request } from 'express';
 import { RolesService } from 'src/roles/roles.service';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -27,6 +28,8 @@ export class AuthController {
   ) {}
   @ResponseMessage('Login user success')
   @UseGuards(LocalAuthGuard)
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 3, ttl: 60 } })
   @Public()
   @Post('login')
   async handleLogin(
