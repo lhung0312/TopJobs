@@ -15,6 +15,7 @@ import { ResponseMessage } from 'src/decorators/message.customize';
 import { User } from 'src/decorators/user.decorator';
 import { IUser } from 'src/users/users.interface';
 import { Public } from 'src/decorators/customizePublic';
+import { SkipCheckPermission } from 'src/decorators/publicPermission';
 
 @Controller('subscribers')
 export class SubscribersController {
@@ -27,6 +28,12 @@ export class SubscribersController {
     @User() user: IUser,
   ) {
     return this.subscribersService.create(createSubscriberDto, user);
+  }
+  @Post('skills')
+  @ResponseMessage("get subscriber's skills")
+  @SkipCheckPermission()
+  getUserSkill(@User() user: IUser) {
+    return this.subscribersService.getSkills(user);
   }
 
   @Public()
@@ -48,6 +55,7 @@ export class SubscribersController {
   }
 
   @ResponseMessage('Update subscriber success')
+  @SkipCheckPermission()
   @Patch('')
   update(
     @Body() updateSubscriberDto: UpdateSubscriberDto,
