@@ -17,7 +17,8 @@ import mongoose from 'mongoose';
 import { identity } from 'rxjs';
 import { ResponseMessage } from 'src/decorators/responseMessage';
 import { Public } from 'src/decorators/publicAuth';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('companies')
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}

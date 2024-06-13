@@ -11,6 +11,8 @@ import {
 import { Job, JobDocument } from 'src/jobs/schemas/job.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('mail')
 @Controller('mail')
 export class MailController {
   constructor(
@@ -21,11 +23,6 @@ export class MailController {
     @InjectModel(Job.name)
     private jobModel: SoftDeleteModel<JobDocument>,
   ) {}
-
-  // @Cron(CronExpression.EVERY_30_SECONDS)
-  // handleCron() {
-  //   console.log('Called every 30 seconds');
-  // }
 
   @Get()
   @Public()
@@ -50,7 +47,7 @@ export class MailController {
         });
         await this.mailerService.sendMail({
           to: 'info.tuanhung@gmail.com',
-          from: '"Support Team" <support@example.com>', // override default from
+          from: '"Support Team" <support@example.com>',
           subject: 'Welcome to Nice App! Confirm your Email',
           template: 'new-job',
           context: {

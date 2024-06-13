@@ -16,7 +16,8 @@ import { User } from 'src/decorators/getReqUser';
 import { IUser } from 'src/users/users.interface';
 import { Public } from 'src/decorators/publicAuth';
 import { SkipCheckPermission } from 'src/decorators/publicPermission';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('subscribers')
 @Controller('subscribers')
 export class SubscribersController {
   constructor(private readonly subscribersService: SubscribersService) {}

@@ -16,7 +16,7 @@ export class SubscribersService {
 
   async create(createSubscriberDto: CreateSubscriberDto, user: IUser) {
     let isExist = await this.subscriberModel.findOne({
-      email: createSubscriberDto.email,
+      email: user.email,
     });
     if (isExist) {
       throw new BadRequestException(

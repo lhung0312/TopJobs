@@ -15,7 +15,8 @@ import { ResponseMessage } from 'src/decorators/responseMessage';
 import { IUser } from './users.interface';
 import { User } from 'src/decorators/getReqUser';
 import { Public } from 'src/decorators/publicAuth';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

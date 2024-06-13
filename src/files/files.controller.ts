@@ -17,7 +17,8 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/decorators/publicAuth';
 import { ResponseMessage } from 'src/decorators/responseMessage';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('files')
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
